@@ -5,64 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>查詢失智共照是否已收案</title>
     <style>
+        /* 簡化樣式代碼 */
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             background-color: #f4f4f4;
         }
-
         .window {
             width: 350px;
             padding: 20px;
             border: 2px solid #ddd;
             border-radius: 15px;
             background-color: #fff;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
-
-        .window h3 {
-            margin-bottom: 20px;
-            font-size: 16px;
-            color: #333;
-        }
-
-        .window input {
-            width: 100%;
-            margin-bottom: 15px;
-            padding: 10px;
-            font-size: 14px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-sizing: border-box;
-        }
-
-        .window button {
-            width: 100%;
-            padding: 12px;
-            font-size: 14px;
-            font-weight: bold;
-            color: white;
-            background-color: #007BFF;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
         .result {
             margin-top: 20px;
             font-size: 14px;
             font-weight: bold;
         }
-
         .result.success {
             color: green;
         }
-
         .result.error {
             color: red;
         }
@@ -78,6 +45,8 @@
     </div>
 
     <script>
+        const API_URL = 'https://kmuh51040.onrender.com/check-case'; // 替換為你的 Render API 地址
+
         async function checkCase() {
             const name = document.getElementById('name').value.trim();
             const idOrCaseNumber = document.getElementById('idOrCaseNumber').value.trim();
@@ -88,9 +57,11 @@
             }
 
             try {
-                const response = await fetch('/check-case', {
+                const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                     body: JSON.stringify({ name, idOrCaseNumber }),
                 });
 
@@ -103,12 +74,9 @@
                 } else {
                     resultDiv.className = 'result error';
                 }
-
-                document.getElementById('name').value = '';
-                document.getElementById('idOrCaseNumber').value = '';
             } catch (error) {
                 console.error('查詢失敗：', error);
-                alert('伺服器無法連線！');
+                alert('查詢失敗，請稍後再試');
             }
         }
     </script>
