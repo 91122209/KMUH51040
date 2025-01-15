@@ -69,7 +69,7 @@ app.post('/check-case', async (req, res) => {
 });
 
 // 啟動伺服器
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`伺服器正在執行於 http://localhost:${PORT}`);
 });
