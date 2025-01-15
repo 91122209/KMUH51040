@@ -25,7 +25,7 @@
         }
 
         .window h3 {
-            font-size: 24px; /* 將標題字體加大 */
+            font-size: 24px;
             margin-bottom: 30px;
             color: #333;
         }
@@ -117,6 +117,10 @@
                 } else {
                     resultDiv.className = 'result error';
                 }
+
+                // 清空輸入框
+                document.getElementById('name').value = '';
+                document.getElementById('idOrCaseNumber').value = '';
             } catch (error) {
                 console.error('查詢失敗：', error);
                 alert('查詢失敗，請稍後再試');
