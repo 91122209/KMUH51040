@@ -53,6 +53,10 @@
             cursor: pointer;
         }
 
+        .window button:hover {
+            background-color: #0056b3;
+        }
+
         .result {
             margin-top: 20px;
             font-size: 14px;
@@ -88,11 +92,18 @@
             }
 
             try {
-                const response = await fetch('/check-case', {
+                const API_URL = 'https://kmuh51040.onrender.com'; // 替換為你的 Render 公開網址
+                const response = await fetch(API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                     body: JSON.stringify({ name, idOrCaseNumber }),
                 });
+
+                if (!response.ok) {
+                    throw new Error(`伺服器返回錯誤，狀態碼：${response.status}`);
+                }
 
                 const result = await response.json();
                 const resultDiv = document.getElementById('result');
@@ -108,7 +119,9 @@
                 document.getElementById('idOrCaseNumber').value = '';
             } catch (error) {
                 console.error('查詢失敗：', error);
-                alert('伺服器無法連線！');
+                const resultDiv = document.getElementById('result');
+                resultDiv.textContent = '查詢失敗，請稍後再試！';
+                resultDiv.className = 'result error';
             }
         }
     </script>
