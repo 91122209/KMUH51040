@@ -1,3 +1,5 @@
+可以幫我用這個語法去改嗎？
+
 const express = require('express');
 const { google } = require('googleapis');
 const cors = require('cors');
@@ -8,12 +10,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 讀取環境變數
+// 从环境变量中读取配置
 const SHEET_ID = process.env.SHEET_ID;
-const SHEET_NAMES = process.env.SHEET_NAMES.split(','); // 轉為陣列
+const SHEET_NAMES = process.env.SHEET_NAMES.split(','); // 分割成数组
 const RANGE = process.env.RANGE;
 
-// 設定 Google Service Account 憑證
+// 配置 Google Service Account 凭据
 const auth = new google.auth.GoogleAuth({
   credentials: {
     client_email: process.env.GOOGLE_CLIENT_EMAIL,
@@ -24,7 +26,7 @@ const auth = new google.auth.GoogleAuth({
 
 const sheets = google.sheets({ version: 'v4', auth });
 
-// **讀取 Google Sheets 並排除 H (索引 7)**
+// 获取数据，并排除 G 列
 async function getSheetData() {
   let allData = [];
   for (const sheetName of SHEET_NAMES) {
@@ -35,36 +37,32 @@ async function getSheetData() {
       });
 
       if (response.data.values) {
-        // **保留 G (索引 6), I (索引 8), J (索引 9)，排除 H (索引 7)**
-        const filteredData = response.data.values.map((row) => [
-          row[6] || '', // G 欄
-          row[8] || '', // I 欄
-          row[9] || ''  // J 欄
-        ]);
+        // 排除 H 列 (假设范围是 G:J, 那么 H 是 row[1])
+        const filteredData = response.data.values.map((row) => [row[0], row[2], row[3]]); // 只保留 F (0), H (2), I (3)
         allData = allData.concat(filteredData);
       }
     } catch (error) {
-      console.error(`讀取工作表 ${sheetName} 時出錯：`, error);
+      console.error(`读取工作表 ${sheetName} 时出错：`, error);
     }
   }
   return allData;
 }
 
-// **定義 POST 路由 /check-case**
+// 定义 POST 路由 /check-case
 app.post('/check-case', async (req, res) => {
   const { name, idOrCaseNumber } = req.body;
   try {
     const data = await getSheetData();
     const found = data.some((row) => {
-      const sheetG = row[0]?.trim() || ''; // G 欄
-      const sheetI = row[1]?.trim() || ''; // I 欄
-      const sheetJ = row[2]?.trim() || ''; // J 欄
+      const sheetName = row[0]?.trim() || ''; // F 列
+      const sheetCaseNumber = row[1]?.trim() || ''; // H 列
+      const sheetIdNumber = row[2]?.trim() || ''; // I 列
 
       return (
-        (name && sheetJ.toLowerCase() === name.trim().toLowerCase()) ||
+        (name && sheetName.toLowerCase() === name.trim().toLowerCase()) ||
         (idOrCaseNumber &&
-          (sheetG === idOrCaseNumber.trim() ||
-            sheetI === idOrCaseNumber.trim()))
+          (sheetCaseNumber === idOrCaseNumber.trim() ||
+            sheetIdNumber === idOrCaseNumber.trim()))
       );
     });
 
@@ -72,16 +70,19 @@ app.post('/check-case', async (req, res) => {
       status: found ? 'found' : 'not_found',
       message: found
         ? '*** 個案已收案 ***'
-        : '未收案，可打給失智共照個管師；\n51040、54039',
+        : '未收案，可打给失智共照個管師；\n51040、54039',
     });
   } catch (error) {
-    console.error('查詢失敗：', error);
-    res.status(500).json({ status: 'error', message: '伺服器錯誤', error });
+    console.error('查询失败：', error);
+    res.status(500).json({ status: 'error', message: '服务器错误', error });
   }
 });
 
-// **啟動伺服器**
+// 启动服务器
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-  console.log(`伺服器正在運行在 http://localhost:${PORT}`);
+  console.log(`服务器正在运行在 http://localhost:${PORT}`);
 });
+
+
+直接幫我改成G.I.J排除H
