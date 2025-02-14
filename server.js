@@ -36,7 +36,11 @@ async function getSheetData() {
 
       if (response.data.values) {
         // **保留 G (索引 6), I (索引 8), J (索引 9)，排除 H (索引 7)**
-        const filteredData = response.data.values.map((row) => [row[6], row[8], row[9]]);
+        const filteredData = response.data.values.map((row) => [
+          row[6] || '', // G 欄
+          row[8] || '', // I 欄
+          row[9] || ''  // J 欄
+        ]);
         allData = allData.concat(filteredData);
       }
     } catch (error) {
@@ -52,15 +56,15 @@ app.post('/check-case', async (req, res) => {
   try {
     const data = await getSheetData();
     const found = data.some((row) => {
-      const sheetCaseNumber = row[0]?.trim() || ''; // G 列
-      const sheetIdNumber = row[1]?.trim() || ''; // I 列
-      const sheetExtraInfo = row[2]?.trim() || ''; // J 列
+      const sheetG = row[0]?.trim() || ''; // G 欄
+      const sheetI = row[1]?.trim() || ''; // I 欄
+      const sheetJ = row[2]?.trim() || ''; // J 欄
 
       return (
-        (name && sheetExtraInfo.toLowerCase() === name.trim().toLowerCase()) ||
+        (name && sheetJ.toLowerCase() === name.trim().toLowerCase()) ||
         (idOrCaseNumber &&
-          (sheetCaseNumber === idOrCaseNumber.trim() ||
-            sheetIdNumber === idOrCaseNumber.trim()))
+          (sheetG === idOrCaseNumber.trim() ||
+            sheetI === idOrCaseNumber.trim()))
       );
     });
 
