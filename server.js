@@ -1,5 +1,3 @@
-可以幫我用這個語法去改嗎？
-
 const express = require('express');
 const { google } = require('googleapis');
 const cors = require('cors');
