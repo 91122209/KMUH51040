@@ -24,7 +24,7 @@ const auth = new google.auth.GoogleAuth({
 
 const sheets = google.sheets({ version: 'v4', auth });
 
-// **讀取 Google Sheets 並排除 H 列**
+// **讀取 Google Sheets 並排除 H (索引 7)**
 async function getSheetData() {
   let allData = [];
   for (const sheetName of SHEET_NAMES) {
@@ -35,8 +35,8 @@ async function getSheetData() {
       });
 
       if (response.data.values) {
-        // **保留 G (1), I (3), J (4)，排除 H (2)**
-        const filteredData = response.data.values.map((row) => [row[1], row[3], row[4]]);
+        // **保留 G (索引 6), I (索引 8), J (索引 9)，排除 H (索引 7)**
+        const filteredData = response.data.values.map((row) => [row[6], row[8], row[9]]);
         allData = allData.concat(filteredData);
       }
     } catch (error) {
