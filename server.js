@@ -54,9 +54,9 @@ app.post('/check-case', async (req, res) => {
   try {
     const data = await getSheetData();
     const found = data.some((row) => {
-      const sheetName = row[0]?.trim() || ''; // F 列
-      const sheetCaseNumber = row[1]?.trim() || ''; // H 列
-      const sheetIdNumber = row[2]?.trim() || ''; // I 列
+      const sheetName = row[0]?.trim() || ''; // G 列
+      const sheetCaseNumber = row[1]?.trim() || ''; // I 列
+      const sheetIdNumber = row[2]?.trim() || ''; // J 列
 
       return (
         (name && sheetName.toLowerCase() === name.trim().toLowerCase()) ||
@@ -83,6 +83,3 @@ const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`服务器正在运行在 http://localhost:${PORT}`);
 });
-
-
-直接幫我改成G.I.J排除H
