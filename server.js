@@ -68,7 +68,7 @@ app.post('/check-case', async (req, res) => {
       status: found ? 'found' : 'not_found',
       message: found
         ? '*** 個案已收案 ***'
-        : '未收案，可打给失智共照個管師；\n51040、54039',
+        : '未收案，可打给失智共照個管師；\n51145、54039',
     });
   } catch (error) {
     console.error('查询失败：', error);
